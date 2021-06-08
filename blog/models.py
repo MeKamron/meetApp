@@ -12,7 +12,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     title = models.CharField(max_length=64, verbose_name="Subkategoriya")
-    parent_cateogory = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
+    parent_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
     slug = models.SlugField(unique=True, max_length=64)
     
     def __str__(self) -> str:

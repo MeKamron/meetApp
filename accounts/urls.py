@@ -10,5 +10,6 @@ urlpatterns = [
     path('regions/', RegionList.as_view()),
     path('regions/<int:pk>/', RegionDetail.as_view()),
     path('users/', UserList.as_view()),
-    path('users/<int:pk>/', UserDetail.as_view())
+    path('users/<int:pk>/', UserDetail.as_view()),
+    path('users/search/', userSearch, name="user_search")
 ]

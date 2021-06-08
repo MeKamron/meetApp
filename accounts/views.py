@@ -5,11 +5,14 @@ from rest_framework import generics, permissions, serializers
 from .serializers import ProfileSerializer, StatusSerializer, RegionSerializer, UserSerializer
 from .models import Profile, Status, Region
 from .permissions import IsOwnerOrReadOnly
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from slugify import slugify
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
 
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
@@ -53,3 +56,20 @@ class RegionDetail(generics.RetrieveAPIView):
     serializer_class = RegionSerializer
 
 
+
+@api_view(['GET'])
+def userSearch(request):
+    if request.method == 'GET':
+        users = User.objects.all()
+        query = request.GET.get("query")
+        real_users = [] 
+        for i in users:
+            if query in i.username:
+                real_users.append(i)
+        
+        serializers = UserSerializer(real_users, many=True)
+        if len(real_users) > 0:
+            return Response((serializers.data))  
+        else:
+            return Response(("Not found"))
+        

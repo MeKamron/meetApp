@@ -28,4 +28,4 @@ class RegionSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer): # new
     class Meta:
         model = User
-        fields = ('id', 'username',)
+        fields = ('id', 'username')
