@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-14jnnjgfo5y*ex&1kn44o^!wu9uz5t=(ny)8#f8$i-xg%w$+-+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,10 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
-    'blog.apps.BlogConfig',
     'django.contrib.sites',
-
 
     # third party
     'rest_framework',
@@ -50,6 +47,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_auth',
     'rest_auth.registration',
+
+    # local
+    'accounts.apps.AccountsConfig',
+    'blog',
 
 ]
 
@@ -137,8 +138,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
 REST_FRAMEWORK = {
