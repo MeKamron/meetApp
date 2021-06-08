@@ -1,21 +1,31 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model # If used custom user model
-from .models import CustomUser
+from .models import Profile, Status, Region
+from django.contrib.auth.models import User
 
+class ProfileSerializer(serializers.ModelSerializer):
 
-class CustomUserSerializer(serializers.ModelSerializer):
-    phone = serializers.CharField(required=True)
-    password = serializers.CharField(min_length=8, write_only=True)
+    #id orniga username korsatish
+    # user = serializers.SerializerMethodField()
+    # def get_user(self, obj):
+    #   return obj.user.username
 
     class Meta:
-        model = CustomUser
-        fields = ("id","phone", "password",)
-        extra_kwargs = {'password': {'write_only': True}}
+        model = Profile
+        fields = "__all__"
 
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model.objects.create(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
+
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = '__all__'
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer): # new
+    class Meta:
+        model = User
+        fields = ('id', 'username',)
