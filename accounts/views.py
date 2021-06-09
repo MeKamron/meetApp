@@ -64,37 +64,22 @@ class RegionDetail(generics.RetrieveAPIView):
 
 class FollowingList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = UserFollowing.objects.all()
+    serializer_class = FollowingSerializer
+
+    def perform_create(self, serializer):
+        user = None
+        if self.request and hasattr(self.request, "user"):
+            user = self.request.user
+        serializer.save(user=user)
+
+
+class FollowingDetail(generics.RetrieveDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = UserFollowing
     serializer_class = FollowingSerializer
 
 
-class FollowingDetail(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = UserFollowing
-    serializer_class = FollowingSerializer
-
-
-class FollowersView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = UserFollowing
+class FollowersView(generics.ListAPIView):
+    queryset = UserFollowing.objects.all()
     serializer_class = FollowersSerializer
-
-
-
-
-# @api_view(['GET'])
-# def userSearch(request):
-#     if request.method == 'GET':
-#         users = User.objects.all()
-#         query = request.GET.get("query")
-#         real_users = [] 
-#         for i in users:
-#             if query in i.username:
-#                 real_users.append(i)
-        
-#         serializers = UserSerializer(real_users, many=True)
-#         if len(real_users) > 0:
-#             return Response((serializers.data))  
-#         else:
-#             return Response(("Not found"))
-        

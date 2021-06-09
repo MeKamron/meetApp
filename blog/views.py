@@ -4,6 +4,7 @@ from .models import Category, Post, SubCategory, Comment
 from accounts.models import Profile
 from .serializers import PostSerializer, CategorySerializer, SubCategorySerializer, CommentSerializer
 from .permissions import IsVerifiedOrReadOnly, IsOwnerOrReadOnly
+from survey.permissions import IsSuperUserOrReadOnly
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import filters
@@ -18,11 +19,6 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, IsVerifiedOrReadOnly]
-
-    # def post(self, request, *args, **kwargs):
-    #     print(request.user.id)
-    #     request.data['author'] = request.user
-    #     return self.create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         user_id = None
@@ -41,12 +37,17 @@ class CommentList(generics.ListCreateAPIView):
                 user_id = self.request.user
             serializer.save(author=user_id)
 
+class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
 class CategoryList(generics.ListCreateAPIView):
     search_fields = ['title']
     filter_backends = (filters.SearchFilter,)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUserOrReadOnly]
 
 
 class SubCategoryList(generics.ListCreateAPIView):
@@ -54,7 +55,7 @@ class SubCategoryList(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUserOrReadOnly]
 
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -13,7 +13,6 @@ class Region(models.Model):
 
 class Status(models.Model):
     title = models.CharField(max_length=64)
-    keyword = models.CharField(max_length=32)
 
     def __str__(self) -> str:
         return self.title
@@ -27,7 +26,7 @@ class Profile(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="users")
     manzil = models.CharField(max_length=300, blank=True)
     category = models.ManyToManyField(Category, related_name="users")
-    sub_category = models.ManyToManyField(SubCategory, related_name="users")
+    sub_category = models.ManyToManyField(SubCategory, related_name="users", blank=True, null=True)
     bio = models.CharField(max_length=512)
 
     def __str__(self):
@@ -36,8 +35,8 @@ class Profile(models.Model):
 
 
 class UserFollowing(models.Model):
-    user_id = models.ForeignKey(UserModel, related_name="following", on_delete=models.CASCADE)
-    following_user_id = models.ForeignKey(UserModel, related_name="followers", on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, related_name="following", on_delete=models.CASCADE)
+    following_user = models.ForeignKey(UserModel, related_name="followers", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         constraints = [

@@ -1,3 +1,4 @@
+from accounts.views import FollowingList
 from django.contrib import admin
 from .models import *
 
@@ -5,3 +6,4 @@ from .models import *
 admin.site.register(Region)
 admin.site.register(Status)
 admin.site.register(Profile)
+admin.site.register(UserFollowing)

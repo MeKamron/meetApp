@@ -11,5 +11,8 @@ urlpatterns = [
     path('regions/<int:pk>/', RegionDetail.as_view()),
     path('users/', UserList.as_view()),
     path('users/<int:pk>/', UserDetail.as_view()),
+    path('followings/', FollowingList.as_view()),
+    path('followings/<int:pk>/', FollowingDetail.as_view()),
+    path('followers/', FollowersView.as_view())
     # path('users/search/', userSearch, name="user_search")
 ]

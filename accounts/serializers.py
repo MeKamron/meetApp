@@ -34,13 +34,13 @@ class FollowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFollowing
-        fields = ("id", "following_user_id", "created")
+        fields = ("id", "following_user", "created")
 
 
 class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
-        fields = ("id", "user_id", "created")
+        fields = ("id", "user", "created")
 
 
 
