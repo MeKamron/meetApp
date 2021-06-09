@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # local
     'accounts.apps.AccountsConfig',
     'blog',
+    'survey.apps.SurveyConfig',
 
 ]
 
