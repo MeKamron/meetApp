@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -98,11 +99,11 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'meetapp',
+        'NAME': 'meetapp_final',
 
-        'USER': 'postgres',
+        'USER': 'admin',
 
-        'PASSWORD': 'meetapp',
+        'PASSWORD': 'admin',
 
         'HOST': '127.0.0.1',
 
@@ -182,3 +183,5 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+django_heroku.settings(locals())
