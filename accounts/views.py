@@ -1,15 +1,16 @@
-from django.db.models import query
 from django.contrib.auth.models import User
-from django.urls.resolvers import RegexPattern
-from rest_framework import generics, permissions, serializers
-from .serializers import ProfileSerializer, StatusSerializer, RegionSerializer, UserSerializer
-from .models import Profile, Status, Region
+from rest_framework import generics, permissions, serializers, viewsets
+from .serializers import *
+from .models import Profile, Status, Region, UserFollowing
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from slugify import slugify
+# from slugify import slugify
+from rest_framework import filters
 
 class UserList(generics.ListAPIView):
+    search_fields = ['username', 'first_name', 'last_name']
+    filter_backends = (filters.SearchFilter,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
@@ -56,20 +57,29 @@ class RegionDetail(generics.RetrieveAPIView):
     serializer_class = RegionSerializer
 
 
+# class UserFollowingViewSet(viewsets.ModelViewSet):
+#     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+#     serializer_class = UserFollowingSerializer
+#     queryset = UserFollowing.objects.all()
 
-@api_view(['GET'])
-def userSearch(request):
-    if request.method == 'GET':
-        users = User.objects.all()
-        query = request.GET.get("query")
-        real_users = [] 
-        for i in users:
-            if query in i.username:
-                real_users.append(i)
+class FollowingView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = UserFollowing
+    serializer_class = FollowingSerializer
+
+# @api_view(['GET'])
+# def userSearch(request):
+#     if request.method == 'GET':
+#         users = User.objects.all()
+#         query = request.GET.get("query")
+#         real_users = [] 
+#         for i in users:
+#             if query in i.username:
+#                 real_users.append(i)
         
-        serializers = UserSerializer(real_users, many=True)
-        if len(real_users) > 0:
-            return Response((serializers.data))  
-        else:
-            return Response(("Not found"))
+#         serializers = UserSerializer(real_users, many=True)
+#         if len(real_users) > 0:
+#             return Response((serializers.data))  
+#         else:
+#             return Response(("Not found"))
         
