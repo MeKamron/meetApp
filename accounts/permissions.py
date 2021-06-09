@@ -15,14 +15,14 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the owner of the snippet.
         return obj.user == request.user
 
-class IsVerifiedOrReadOnly(permissions.BasePermission):
+# class IsVerifiedOrReadOnly(permissions.BasePermission):
 
-    """ 
-    Custom permission to only allow staff users to post
-    """
+#     """ 
+#     Custom permission to only allow staff users to post
+#     """
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
+#     def has_object_permission(self, request, view, obj):
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
         
-        return request.user.is_staff
+#         return request.user.is_staff

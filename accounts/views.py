@@ -62,10 +62,25 @@ class RegionDetail(generics.RetrieveAPIView):
 #     serializer_class = UserFollowingSerializer
 #     queryset = UserFollowing.objects.all()
 
-class FollowingView(generics.ListCreateAPIView):
+class FollowingList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = UserFollowing
     serializer_class = FollowingSerializer
+
+
+class FollowingDetail(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = UserFollowing
+    serializer_class = FollowingSerializer
+
+
+class FollowersView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = UserFollowing
+    serializer_class = FollowersSerializer
+
+
+
 
 # @api_view(['GET'])
 # def userSearch(request):
