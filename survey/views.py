@@ -5,11 +5,7 @@ from .serializers import QuestionSerializer, ChoiceSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .permissions import IsSuperUserOrReadOnly
-<<<<<<< HEAD
 from rest_framework.decorators import api_view
-=======
-
->>>>>>> 17e482e7b18bc60b63f7d48788237b22c270d5e1
 
 class QuestionList(generics.ListCreateAPIView):
     queryset = Question.objects.all()
