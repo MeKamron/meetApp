@@ -1,3 +1,4 @@
+from accounts.serializers import ProfileSerializer, UserSerializer
 from django.db.models import fields
 from rest_framework import generics
 from rest_framework import serializers
@@ -41,9 +42,10 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    profiles = ProfileSerializer(many=True, read_only=True)
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['title', 'profiles' ]
 
       
 class SubCategorySerializer(serializers.ModelSerializer):

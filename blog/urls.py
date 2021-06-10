@@ -12,5 +12,6 @@ urlpatterns = [
     path('subcategories/', SubCategoryList.as_view()),
     # path('subcategories/search/', subCategorySearch)
     path('comments/', CommentList.as_view()),
-    path('comments/<int:pk>/', CommentDetail.as_view())
+    path('comments/<int:pk>/', CommentDetail.as_view()),
+    path('categories/<int:pk>/', CategoryDetail.as_view()),
 ]

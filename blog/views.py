@@ -1,11 +1,13 @@
 import re
+from django.db.models import query
 from rest_framework import generics, permissions
 from .models import Category, Post, SubCategory, Comment
 from accounts.models import Profile
 from .serializers import PostSerializer, CategorySerializer, SubCategorySerializer, CommentSerializer
 from .permissions import IsVerifiedOrReadOnly, IsOwnerOrReadOnly
+from rest_framework.authentication import TokenAuthentication
 from survey.permissions import IsSuperUserOrReadOnly
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import filters
 from .paginations import CustomPagination
@@ -19,6 +21,7 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, IsVerifiedOrReadOnly]
+    authentication_classes = [TokenAuthentication]
 
     def perform_create(self, serializer):
         user_id = None
@@ -29,7 +32,8 @@ class PostList(generics.ListCreateAPIView):
 class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated, IsVerifiedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def perform_create(self, serializer):
             user_id = None
@@ -37,10 +41,13 @@ class CommentList(generics.ListCreateAPIView):
                 user_id = self.request.user
             serializer.save(author=user_id)
 
+
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
+
 
 class CategoryList(generics.ListCreateAPIView):
     search_fields = ['title']
@@ -48,6 +55,14 @@ class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperUserOrReadOnly]
+    authentication_classes = [TokenAuthentication]
+
+
+class CategoryDetail(generics.RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperUserOrReadOnly]
+    authentication_classes = [TokenAuthentication]
 
 
 class SubCategoryList(generics.ListCreateAPIView):
@@ -56,16 +71,22 @@ class SubCategoryList(generics.ListCreateAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubCategorySerializer
     permission_classes = [permissions.IsAuthenticated, IsSuperUserOrReadOnly]
+    authentication_classes = [TokenAuthentication]
 
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    authentication_classes = [TokenAuthentication]
+    
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def related_post(request):
+    
     if request.method == 'GET':
         posts = Post.objects.all()
         profile_data = None
