@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from blog.models import Category, SubCategory
 from django.contrib.auth import get_user_model
+
 UserModel = get_user_model()
 
 class Region(models.Model):
@@ -47,3 +48,4 @@ class UserFollowing(models.Model):
 
     def __str__(self):
         return f"{self.user_id} follows {self.following_user_id}"
+

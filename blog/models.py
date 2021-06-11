@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     title = models.CharField(max_length=64, verbose_name="Kategoriya")
+    icon = models.ImageField(upload_to='categories/', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -12,6 +13,7 @@ class Category(models.Model):
 class SubCategory(models.Model):
     title = models.CharField(max_length=64, verbose_name="Subkategoriya")
     parent_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
+    image = models.ImageField(upload_to='sub_categories/', blank=True, null=True)
     
     def __str__(self):
         return self.title

@@ -14,5 +14,4 @@ urlpatterns = [
     path('followings/', FollowingList.as_view()),
     path('followings/<int:pk>/', FollowingDetail.as_view()),
     path('followers/', FollowersView.as_view())
-    # path('users/search/', userSearch, name="user_search")
 ]

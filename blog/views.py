@@ -11,6 +11,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework import filters
 from .paginations import CustomPagination
+from django.shortcuts import get_object_or_404
 
 
 
@@ -82,23 +83,47 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     
 
 
+# @api_view(['GET'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([permissions.IsAuthenticated])
+# def related_post(request, profile_id):
+    
+#     if request.method == 'GET':
+        # posts = Post.objects.all()
+        # profile_data = None
+        # profiles = [x for x in Profile.objects.all()]
+        # for profile in profiles:
+        #     if profile.user.id == request.user.id:
+        #         profile_data = profile
+
+        # real_posts = []
+        # for post in posts:
+        #     if post.category in profile_data.category.all() or post.sub_category in profile_data.sub_category.all():
+        #         real_posts.append(post)
+        # serializers = PostSerializer(real_posts, many=True)
+        # return Response(serializers.data)
+        # profile = get_object_or_404(Profile, id=profile_id)
+        # profile_categories = profile.category.all()
+        # related_posts = Post.objects.filter('category__in'==profile_categories)
+        # serializers = PostSerializer(related_posts, many=True)
+        # return Response(serializers.data)
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def related_post(request):
-    
-    if request.method == 'GET':
-        posts = Post.objects.all()
-        profile_data = None
-        profiles = [x for x in Profile.objects.all()]
-        for profile in profiles:
-            if profile.user.id == request.user.id:
-                profile_data = profile
-
-        real_posts = []
-        for post in posts:
-            if post.category in profile_data.category.all() or post.sub_category in profile_data.sub_category.all():
-                real_posts.append(post)
-        serializers = PostSerializer(real_posts, many=True)
+def mixed_posts(request, profile_id):
+    if request.method == "GET":
+        profile = get_object_or_404(Profile, id=profile_id)
+        profile_categories = profile.category.all()
+        related_posts = Post.objects.filter('category__in'==profile_categories)
+        serializers = PostSerializer(related_posts, many=True)
+        mixed_posts = []
+        if related_posts:
+            for post in related_posts:
+                if post.id % 2 == 0:
+                    mixed_posts.append(post)
+            for post in related_posts:
+                if post.id%2 != 0:
+                    mixed_posts.append(post)
+            serializers = PostSerializer(mixed_posts, many=True)
         return Response(serializers.data)
-
