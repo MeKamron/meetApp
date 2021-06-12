@@ -5,7 +5,7 @@ from .views import *
 urlpatterns = [   
     path('posts/', PostList.as_view()),
     path('posts/<int:pk>/', PostDetail.as_view()),
-    path('posts/related/<int:profile_id>/', mixed_posts),
+    path('posts/related/<int:user_id>/', mixed_posts),
     # path('posts/search/', postSearch),
     path('categories/', CategoryList.as_view()),
     # path('categories/search/', categorySearch),
