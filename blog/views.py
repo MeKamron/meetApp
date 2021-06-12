@@ -1,8 +1,9 @@
+from accounts.serializers import ProfileSerializer, UserSerializer
 import re
 from django.db.models import query
 from rest_framework import generics, permissions
 from .models import Category, Post, SubCategory, Comment
-from accounts.models import Profile
+from accounts.models import Profile, UserFollowing
 from .serializers import PostSerializer, CategorySerializer, SubCategorySerializer, CommentSerializer
 from .permissions import IsVerifiedOrReadOnly, IsOwnerOrReadOnly
 from rest_framework.authentication import TokenAuthentication
@@ -12,6 +13,9 @@ from rest_framework.response import Response
 from rest_framework import filters
 from .paginations import CustomPagination
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
 
 
 
@@ -83,31 +87,6 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     
 
 
-# @api_view(['GET'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([permissions.IsAuthenticated])
-# def related_post(request, profile_id):
-    
-#     if request.method == 'GET':
-        # posts = Post.objects.all()
-        # profile_data = None
-        # profiles = [x for x in Profile.objects.all()]
-        # for profile in profiles:
-        #     if profile.user.id == request.user.id:
-        #         profile_data = profile
-
-        # real_posts = []
-        # for post in posts:
-        #     if post.category in profile_data.category.all() or post.sub_category in profile_data.sub_category.all():
-        #         real_posts.append(post)
-        # serializers = PostSerializer(real_posts, many=True)
-        # return Response(serializers.data)
-        # profile = get_object_or_404(Profile, id=profile_id)
-        # profile_categories = profile.category.all()
-        # related_posts = Post.objects.filter('category__in'==profile_categories)
-        # serializers = PostSerializer(related_posts, many=True)
-        # return Response(serializers.data)
-
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -115,7 +94,7 @@ def mixed_posts(request, profile_id):
     if request.method == "GET":
         profile = get_object_or_404(Profile, id=profile_id)
         profile_categories = profile.category.all()
-        related_posts = Post.objects.filter('category__in'==profile_categories)
+        related_posts = Post.objects.filter(category__in=profile_categories)
         serializers = PostSerializer(related_posts, many=True)
         mixed_posts = []
         if related_posts:
@@ -126,4 +105,25 @@ def mixed_posts(request, profile_id):
                 if post.id%2 != 0:
                     mixed_posts.append(post)
             serializers = PostSerializer(mixed_posts, many=True)
+        return Response(serializers.data)
+    
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def recommendations(request, user_id):
+    if request.method == "GET":
+        user = get_object_or_404(UserModel, id=user_id)
+        serializers = None
+        related_profiles = None
+        if user:
+            related_profiles = Profile.objects.filter(category__in=user.profile.category.all())
+            tavsiyalar = []
+            followings = []
+            for u_following in user.following.all():
+                followings.append(u_following.following_user)
+            for profile in related_profiles:
+                if profile.user not in followings and profile.user not in tavsiyalar and profile.user != user:
+                    tavsiyalar.append(profile.user)
+            serializers = UserSerializer(tavsiyalar, many=True)
         return Response(serializers.data)

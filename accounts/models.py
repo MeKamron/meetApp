@@ -28,7 +28,7 @@ class Profile(models.Model):
     manzil = models.CharField(max_length=300, blank=True)
     category = models.ManyToManyField(Category, related_name="profiles")
     sub_category = models.ManyToManyField(SubCategory, related_name="profiles", blank=True, null=True)
-    bio = models.CharField(max_length=512)
+    bio = models.CharField(max_length=512, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -41,7 +41,7 @@ class UserFollowing(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user_id','following_user_id'],  name="unique_followers")
+            models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
         ]
 
         ordering = ["-created"]

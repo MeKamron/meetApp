@@ -97,3 +97,4 @@ class FollowersView(generics.ListAPIView):
     queryset = UserFollowing.objects.all()
     serializer_class = FollowersSerializer
     authentication_classes = [TokenAuthentication]
+
