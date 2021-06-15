@@ -1,12 +1,13 @@
 from rest_framework import generics, permissions
 from .models import Question, Choice
-from accounts.models import Profile
 from .serializers import QuestionSerializer, ChoiceSerializer
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from .permissions import IsSuperUserOrReadOnly
-from rest_framework.decorators import api_view
 from rest_framework.authentication import TokenAuthentication
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+
 
 class QuestionList(generics.ListCreateAPIView):
     queryset = Question.objects.all()
@@ -38,3 +39,5 @@ def vote(request):
         choice.votes += 1
         choice.save()
         return Response(serializers.data)
+
+ 

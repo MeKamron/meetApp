@@ -18,6 +18,10 @@ from django.urls import path, include
 from accounts.views import *
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.documentation import include_docs_urls 
+
+API_TITLE = 'Blog API'
+API_DESCRIPTION = 'A Web API for creating and editing blog posts.'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +31,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/v1/rest-auth/', include('rest_auth.urls')),
     path('api/v1/rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
 ]
 
 if settings.DEBUG:

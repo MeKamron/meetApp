@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     # third party
     'rest_framework',
     'rest_framework.authtoken',
-    'allauth', # new
-    'allauth.account', # new
+    'rest_framework_swagger',
+    'allauth', 
+    'allauth.account',
     'allauth.socialaccount',
     'rest_auth',
     'rest_auth.registration',
@@ -184,3 +185,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 django_heroku.settings(locals())
+
+
+REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }

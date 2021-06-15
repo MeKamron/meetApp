@@ -1,5 +1,4 @@
 from accounts.serializers import ProfileSerializer, UserSerializer
-import re
 from django.db.models import query
 from rest_framework import generics, permissions
 from .models import Category, Post, SubCategory, Comment
