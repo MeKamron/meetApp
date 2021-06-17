@@ -29,7 +29,7 @@ class Profile(models.Model):
     status = models.ForeignKey(Status, on_delete=models.CASCADE, related_name="users")
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="users")
     manzil = models.CharField(max_length=300, blank=True)
-    category = models.ManyToManyField(Category, related_name="profiles")
+    category = models.ManyToManyField(Category, related_name="profiles", blank=True, null=True)
     sub_category = models.ManyToManyField(SubCategory, related_name="profiles", blank=True, null=True)
     bio = models.CharField(max_length=512, blank=True)
 
