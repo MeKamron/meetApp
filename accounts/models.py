@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from blog.models import Category, SubCategory
 from django.contrib.auth import get_user_model
+from PIL import Image
 
 UserModel = get_user_model()
 
@@ -20,9 +21,11 @@ class Status(models.Model):
 
 
 class Profile(models.Model):
+    name = models.CharField(max_length=200)
+    surname = models.CharField(max_length=200)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=True, null=True)
-    photo = models.ImageField(upload_to='users/photos/', blank=True,null=True)
+    photo = models.ImageField(upload_to='users/photos/', blank=True, null=True)
     status = models.ForeignKey(Status, on_delete=models.CASCADE, related_name="users")
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="users")
     manzil = models.CharField(max_length=300, blank=True)
@@ -32,6 +35,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save(self):
+        super().save()  # saving image first
+
+        img = Image.open(self.photo.path) # Open image using self
+
+        if img.height > 300 or img.width > 300:
+            new_img = (500, 600)
+            img.thumbnail(new_img)
+            img.save(self.photo.path) 
 
 
 
